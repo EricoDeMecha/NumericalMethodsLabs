@@ -1,55 +1,28 @@
-function solveODE(pol_det,ode_str,cond1_str,cond2_str)
+function solveODE(ode_str,cond1_str,cond2_str,indept)
 % function : solveODE(param1, param2, param3)
 %           solveODE() function solves constant coefficient Homogeneous equations
 % params: param1, param2, param3
-%        param1: ODE string e.g  ay``+by``+c=0 Note: use acute punctuation marks instead of apostrophes
-%        param2: First condition
-%        param3: Second derivative condition
+%        param1: ODE string e.g  a*D2y+b*Dy+c*y=0 Note: use acute punctuation marks instead of apostrophes
+%        param2: First condition e.g y(0)=0
+%        param3: second condition e.g Dy(0)=1
+%        param4: Independent  variable e.g x 
 %     Note: Parameters should follow there respective orders as shown above
 % return: Output
 %       Displays the output in a lex format 
     if nargin < 4
-        fprintf("Usage: solveODE y ay``+by`+cy=0 y(d)=e y'(f)=g \n");
+        fprintf("Usage: solveODE a*D2y+b*Dy+c*y=0  y(d)=e y'(f)=g x\n");
         return;
     end
     % verify the arguments
-    verifyArguments(ode_str, cond1_str, cond2_str);
-    % get the coefficients of the script
+    %verifyArguments(ode_str, cond1_str, cond2_str);
+    % get the coefficients of the string equation
+    [Coefs, matches] = strsplit(ode_str, {'*D2y', '*Dy', '*y'});
+    Coefs(end)=[];% remove the last element(=0)
+    disp(Coefs);
     % TODO Get a,b,and c 
     %      Compute the derivative
     %      Display using LaTEX
-    syms (pol_det)
-    c = coeffs(ode_str);
-    disp(c);
-end
+    
+    % - extract the coefficients
 
-function verifyArguments(ode_str, cond1_str, cond2_str)
-%function: verifyArguments(ode_str, cond1_str, cond2_str)
-%           Checks whether the arguments follow the required format
-% params: param1, param2, param3
-%        param1: ODE string 
-%        param2: First condition string
-%        param3: Second derivative condition string
-%     Note: Parameters should follow there respective orders as shown above
-% return: Output
-%       Displays an error message incase of  an error
-    ode_patt = "^.*[a-zA-Z]``.*[a-zA-Z]`.*[a-zA-Z]=0$";
-    ode_ver = regexp(ode_str, ode_patt, "match");
-    cond1_patt = "^[a-zA-Z]\(\d\)=[0-9]+$";
-    cond1_ver = regexp(cond1_str, cond1_patt, "match");
-    cond2_patt = "^[a-zA-Z]`\(\d\)=[0-9]+$";
-    cond2_ver = regexp(cond2_str, cond2_patt, "match");
-
-    if isempty(ode_ver)
-        fprintf("Your ODE expression do not  match the required format\n");
-        return;
-    end
-    if isempty(cond1_ver)
-        fprintf("Your 1st condition do not  match the required format\n");
-        return;
-    end
-    if isempty(cond2_ver)
-        fprintf("Your 2nd  condition do not  match the required format\n");
-        return;
-    end
 end
