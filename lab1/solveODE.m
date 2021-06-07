@@ -1,4 +1,4 @@
-function solveODE(ode_str,cond1_str,cond2_str)
+function solveODE(pol_det,ode_str,cond1_str,cond2_str)
 % function : solveODE(param1, param2, param3)
 %           solveODE() function solves constant coefficient Homogeneous equations
 % params: param1, param2, param3
@@ -8,20 +8,19 @@ function solveODE(ode_str,cond1_str,cond2_str)
 %     Note: Parameters should follow there respective orders as shown above
 % return: Output
 %       Displays the output in a lex format 
-    if nargin < 3
-        fprintf("Usage: solveODE ay``+by`+cy=0 y(d)=e y'(f)=g ");
+    if nargin < 4
+        fprintf("Usage: solveODE y ay``+by`+cy=0 y(d)=e y'(f)=g \n");
         return;
     end
     % verify the arguments
     verifyArguments(ode_str, cond1_str, cond2_str);
-    ode_val_patt = "([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[eE]([+-]?\d+))?";
-    ode_vals= regexp(ode_str, ode_val_patt, "split");
-    disp(ode_vals);
-    
+    % get the coefficients of the script
     % TODO Get a,b,and c 
     %      Compute the derivative
     %      Display using LaTEX
-    
+    syms (pol_det)
+    c = coeffs(ode_str);
+    disp(c);
 end
 
 function verifyArguments(ode_str, cond1_str, cond2_str)
