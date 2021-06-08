@@ -1,5 +1,5 @@
 ##  Solve ODEs without dsolve
-This is  a scripts that solves constant coefficient ODE equations without usind dsolve
+This is a script that solves constant coefficient ODE equations without using dsolve
 
 ### Setup 
 
