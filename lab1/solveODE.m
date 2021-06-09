@@ -110,7 +110,32 @@ function solveODE(ode_str,cond1_str,cond2_str,indept)
         r1 = (-b + sqrt((b^2 - 4 * a * c))) / (2 * a);
         r2 = (-b - sqrt((b^2 - 4 * a * c))) / (2 * a);
         % general solution
-        y = "c1*" + num2str(exp(r1)) + "+c2*" + num2str(exp(r2));
-        disp(y);
+        y1 = "exp(" + num2str(real(r1)) + "*" + indept + ")*cos("+num2str(imag(r1)) +"*"+ indept + ")";
+        y2 = "exp(" + num2str(real(r2)) + "*" + indept + ")*cos(" + num2str(imag(r2)) + "*" + indept + ")";
+        par = "@("+indept+")";
+        f1 = sym(str2func([convertStringsToChars(par), convertStringsToChars(y1)]));
+        f2 = sym(str2func([convertStringsToChars(par), convertStringsToChars(y2)]));
+
+        g1 = diff(f1); g2 = diff(f2);
+        disp(g1); disp(g2);
+        % containing the other two functionalities
+
+        syms(convertStringsToChars(indept))
+        init_var = "= "+ num2str(x0);
+        eval([indept convertStringsToChars(init_var)]); % a shot in the knee but it is worth taking it
+        A1 = [subs(f1) subs(f2)];
+        init_var = "= "+ num2str(dx0);
+        eval([indept convertStringsToChars(init_var)]);
+        A2 = [subs(g1) subs(g2)];
+        A = [A1 ; A2];
+        B = [y0; dy0];
+        C = A\B; % solve for c1 and c2
+        fprintf("Solution using the re-invented dsolve\n");
+        sol = num2str(double(C(2))) + "*"+ y2 +"+"+num2str(double(C(1))) +"*"+y1;
+        disp(sol); 
+        fprintf("Solution using actual dsolve \n");
+        conds = cond1_str + "," + cond2_str;
+        d_sol = dsolve(convertStringsToChars(ode_str), convertStringsToChars(conds),convertStringsToChars(indept));
+        disp(d_sol);
     end
 end
